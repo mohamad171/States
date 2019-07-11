@@ -2,6 +2,7 @@ package ir.moderndata.states;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,19 +17,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.JsonReader;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,9 +34,11 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import ir.moderndata.states.Activitys.CurrentRolesActivity;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -67,6 +66,7 @@ public class StartActivity extends AppCompatActivity {
         spinner_layout = findViewById(R.id.spinner_layout);
         submit_dont_access_btn = findViewById(R.id.submit_dont_access_btn);
         selfie_img = findViewById(R.id.selfie_img);
+        end_route = findViewById(R.id.end_route);
         selfie_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +94,9 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 timer.cancel();
+                Intent intent = new Intent(StartActivity.this,CurrentRolesActivity.class);
+                startActivity(intent);
+
 //                List<Locations> locations = SQLite.select().from(Locations.class).queryList();
 //                int counter = locations.size();
 //                for(int i = 0;i<locations.size();i++){
@@ -147,8 +150,8 @@ public class StartActivity extends AppCompatActivity {
         });
 
 
-        timer.schedule(doAsynchronousTask, 0, 60000);
-        end_route = findViewById(R.id.end_route);
+//        timer.schedule(doAsynchronousTask, 0, 60000);
+
     }
     private void setLocations(final int recId, String location, String projectId, String teamId){
         timer.cancel();
@@ -208,5 +211,9 @@ public class StartActivity extends AppCompatActivity {
             StrictMode.setVmPolicy(builder.build());
             startActivityForResult(cameraIntent,1000);
         }
+    }
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }
